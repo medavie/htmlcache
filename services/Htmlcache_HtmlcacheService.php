@@ -64,6 +64,10 @@ class Htmlcache_HtmlcacheService extends BaseApplicationComponent
             return false;
         }
 
+        if (\htmlcache_isExcluded()) {
+            return false;
+        }
+
         return true;
     }
     

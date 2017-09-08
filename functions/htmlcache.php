@@ -43,6 +43,22 @@ if (!function_exists('htmlcache_filename')) {
         return dirname(dirname(dirname(__DIR__))) . DIRECTORY_SEPARATOR . 'storage' . DIRECTORY_SEPARATOR . 'runtime' . DIRECTORY_SEPARATOR . 'htmlcache' . DIRECTORY_SEPARATOR;
     }
 
+    function htmlcache_isExcluded() 
+    {
+        if (file_exists($settingsFile = htmlcache_directory() . 'settings.json')) {
+            $settings = json_decode(file_get_contents($settingsFile), true);
+        } else {
+            $settings = ['excludedPaths' => ''];
+        }
+
+        $excludedPaths = preg_split ('/[\s*,\s*]*,+[\s*,\s*]*/', $settings['excludedPaths']);
+        foreach ($excludedPaths as $excludedPath) {
+            if ($excludedPath == craft()->request->getNormalizedPath()) {
+                return true;
+            } 
+        }
+        return false;
+    }
     function htmlcache_indexEnabled($enabled = true)
     {
         $replaceWith = '/*HTMLCache Begin*/if (defined(\'CRAFT_PLUGINS_PATH\')) {require_once CRAFT_PLUGINS_PATH . DIRECTORY_SEPARATOR . \'htmlcache\' . DIRECTORY_SEPARATOR . \'functions\' . DIRECTORY_SEPARATOR . \'htmlcache.php\';} else {require_once str_replace(\'index.php\', \'../plugins\' . DIRECTORY_SEPARATOR . \'htmlcache\' . DIRECTORY_SEPARATOR . \'functions\' . DIRECTORY_SEPARATOR . \'htmlcache.php\', $path);}htmlcache_checkCache();/*HTMLCache End*/';

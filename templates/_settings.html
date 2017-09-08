@@ -28,6 +28,13 @@
     value:        settings.cacheDuration,
     errors:       settings.getErrors('honeypotField')
 }) }}
+{{ forms.textField({
+    label:        "Normalized paths excluded from caching" | t,
+    id:           'excludedPaths',
+    name:         'excludedPaths',
+    instructions: "Comma separated list of normalized paths to exclude, e.g. members,adherents,members/somepage"|t,
+    value:        settings.excludedPaths
+}) }}
 
 {{ forms.lightswitchField({
     label:        "Purge Cache now?" | t,
